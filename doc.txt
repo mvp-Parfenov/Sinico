@@ -1,0 +1,45 @@
+docker run -e MYSQL_ROOT_PASSWORD=root -w /etc -p 8000:80 mysql ls
+docker run -e MYSQL_ROOT_PASSWORD=root -w /etc -p 8000:80 mysql ls
+docker run -e MYSQL_ROOT_PASSWORD=root mysql ls
+docker-compose up -d
+
+-- порт 33061 который локально у нас смотрит на докер машинку под портом 3306
+mysql -uapp -psecret --port 33061 --host 127.0.0.1
+
+-- удаление , очистка но image остаются скаченными
+docker-compose down
+
+-- в связи с изменение конфигов docker-compose по новой засетить конфиги и собрать образы 
+
+docker-compose up --build -d 
+
+-- поднять 3 контейнера mysql
+docker-compose up --build -d --scale mysql=3
+
+-- up по новой создает
+-- down полностью удаляет файл систему и очищь память 
+-- для этого существует система volumes в которую и будут записываться данные с обазов и при down не удалятся 
+
+
+volumes:
+      - ./:/var/www
+
+-- перезапишет .env настройки которые приходят из вне, те которые будут в php , он заменит на настройки из enviroment прописанных ниже
+    environment:
+      - "DB_PORT:3306"
+      - "DB_HOST:mysql"
+      - "REDIS_PORT=6379"
+      - "REDIS_HOST=redis"
+
+
+-- для того что-бы указать последовательность создания образов, (что необходимо текущему , без чего он не сможет )
+-- links 
+
+php artisan migrate
+docker exec someNameMachine php artisan migrate
+
+-- сначала ранит perm, а затем assets-watch
+assets-watch: perm 
+
+make docker-up  -> docker-compoer up -d 
+
