@@ -49,7 +49,7 @@ Mail::to($user)->que(new DTO()) // добавляет в очередь на о�
 
 ----------------------------------------
 
--- full crud controller
+-- full crud controller CRUD
 php artisan make:controller Admin\\UsersController --resource
 
 index -- show list
