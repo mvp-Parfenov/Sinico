@@ -4,27 +4,22 @@ namespace App\Entity;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Str;
 
 /**
- * Class User
- * @package App
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property string $password
+ * @property string $verify_token
  * @property string $status
  */
 class User extends Authenticatable
 {
     use Notifiable;
+    public const STATUS_WAIT = 'wait';
+    public const STATUS_ACTIVE = 'active';
 
-    const STATUS_WAIT = 'wait';
-    const STATUS_ACTIVE = 'active';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'name',
         'email',
@@ -32,13 +27,70 @@ class User extends Authenticatable
         'status',
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
+    /**
+     * @param string $name
+     * @param string $email
+     * @param string $password
+     * @return User
+     */
+    public static function register(string $name, string $email, string $password): self
+    {
+        return static::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => bcrypt($password),
+            'verify_token' => Str::uuid(),
+            'status' => self::STATUS_WAIT,
+        ]);
+    }
+
+    /**
+     * @param $name
+     * @param $email
+     * @return User
+     */
+    public static function new($name, $email): self
+    {
+        return static::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => bcrypt(Str::random()),
+            'status' => self::STATUS_ACTIVE,
+        ]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWait(): bool
+    {
+        return $this->status === self::STATUS_WAIT;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->status === self::STATUS_ACTIVE;
+    }
+
+    /**
+     * @throws \DomainException
+     */
+    public function verify(): void
+    {
+        if (!$this->isWait()) {
+            throw new \DomainException('User is already verified.');
+        }
+        $this->update([
+            'status' => self::STATUS_ACTIVE,
+            'verify_token' => null,
+        ]);
+    }
 }
