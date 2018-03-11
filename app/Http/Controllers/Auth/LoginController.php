@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\User;
+use App\Entity\User;
 use Auth;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
