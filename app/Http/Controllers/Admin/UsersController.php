@@ -10,9 +10,25 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use function redirect;
+use RegisterService;
 
 class UsersController extends Controller
 {
+
+    /**
+     * @var RegisterService
+     */
+    private $registerService;
+
+    /**
+     * UsersController constructor.
+     * @param RegisterService $registerService
+     */
+    public function __construct(RegisterService $registerService)
+    {
+        $this->registerService = $registerService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -39,7 +55,7 @@ class UsersController extends Controller
      * Store a newly created resource in storage.
      *
      * @param CreateRequest $request
-     * @return Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(CreateRequest $request)
     {
@@ -108,7 +124,7 @@ class UsersController extends Controller
 
     public function verify(User $user)
     {
-        $user->verify();
+        $this->registerService->verify($user->id);
 
         return redirect()->route('admin.users.show');
     }

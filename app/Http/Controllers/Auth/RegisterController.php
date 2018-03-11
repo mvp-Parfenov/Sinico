@@ -8,12 +8,22 @@ use App\Entity\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Mail;
+use RegisterService;
 
 class RegisterController extends Controller
 {
-    public function __construct()
+
+    /**
+     * @var RegisterService
+     */
+    private $registerService;
+
+    public function __construct(
+        RegisterService $registerService
+    )
     {
         $this->middleware('guest');
+        $this->registerService = $registerService;
     }
 
     public function showRegistrationForm()
@@ -23,13 +33,7 @@ class RegisterController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        $user = User::register(
-            $request['name'],
-            $request['email'],
-            $request['password']
-        );
-        Mail::to($user->email)->send(new VerifyMail($user));
-        event(new Registered($user));
+        $this->registerService->register($request);
 
         return redirect()->route('login')
             ->with('success', 'Check your email and click on the link to verify.');
@@ -42,7 +46,7 @@ class RegisterController extends Controller
                 ->with('error', 'Sorry your link cannot be identified.');
         }
         try {
-            $user->verify();
+            $this->registerService->verify($user->id);
 
             return redirect()->route('login')->with('success', 'Your e-mail is verified. You can now login.');
         } catch (\DomainException $e) {
