@@ -29,6 +29,7 @@ class RegisterTest extends TestCase
 
         self::assertTrue($user->isWait());
         self::assertFalse($user->isActive());
+        self::assertFalse($user->isAdmin());
     }
 
     public function testVerify(): void
@@ -39,6 +40,7 @@ class RegisterTest extends TestCase
 
         self::assertFalse($user->isWait());
         self::assertTrue($user->isActive());
+        self::assertFalse($user->isAdmin());
     }
 
     public function testAlreadyVerified(): void

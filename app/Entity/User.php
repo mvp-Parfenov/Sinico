@@ -18,8 +18,10 @@ use Illuminate\Support\Str;
 class User extends Authenticatable
 {
     use Notifiable;
+
     public const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
+
     public const ROLE_USER = 'user';
     public const ROLE_ADMIN = 'admin';
 
@@ -117,5 +119,4 @@ class User extends Authenticatable
     {
         return $this->role === self::ROLE_ADMIN;
     }
-
 }
