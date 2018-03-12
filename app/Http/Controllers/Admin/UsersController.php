@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use function redirect;
 use RegisterService;
+use Request;
 
 class UsersController extends Controller
 {
@@ -32,13 +33,37 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::orderByDesc('id')->paginate(20);
-
-        return view('admin.users.index', compact('users'));
+        $query = User::orderByDesc('id');
+        if (!empty($value = $request->get('id'))) {
+            $query->where('id', $value);
+        }
+        if (!empty($value = $request->get('name'))) {
+            $query->where('name', 'like', '%' . $value . '%');
+        }
+        if (!empty($value = $request->get('email'))) {
+            $query->where('email', 'like', '%' . $value . '%');
+        }
+        if (!empty($value = $request->get('status'))) {
+            $query->where('status', $value);
+        }
+        if (!empty($value = $request->get('role'))) {
+            $query->where('role', $value);
+        }
+        $users = $query->paginate(20);
+        $statuses = [
+            User::STATUS_WAIT => 'Waiting',
+            User::STATUS_ACTIVE => 'Active',
+        ];
+        $roles = [
+            User::ROLE_USER => 'User',
+            User::ROLE_ADMIN => 'Admin',
+        ];
+        return view('admin.users.index', compact('users', 'statuses', 'roles'));
     }
 
     /**
