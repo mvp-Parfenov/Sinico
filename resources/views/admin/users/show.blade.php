@@ -22,13 +22,16 @@
     <table class="table table-bordered table-striped">
         <tbody>
         <tr>
-            <th>ID</th><td>{{ $user->id }}</td>
+            <th>ID</th>
+            <td>{{ $user->id }}</td>
         </tr>
         <tr>
-            <th>Name</th><td>{{ $user->name }}</td>
+            <th>Name</th>
+            <td>{{ $user->name }}</td>
         </tr>
         <tr>
-            <th>Email</th><td>{{ $user->email }}</td>
+            <th>Email</th>
+            <td>{{ $user->email }}</td>
         </tr>
         <tr>
             <th>Status</th>
@@ -38,6 +41,16 @@
                 @endif
                 @if ($user->isActive())
                     <span class="badge badge-primary">Active</span>
+                @endif
+            </td>
+        </tr>
+        <tr>
+            <th>Role</th>
+            <td>
+                @if ($user->isAdmin())
+                    <span class="badge badge-danger">Admin</span>
+                @else
+                    <span class="badge badge-secondary">User</span>
                 @endif
             </td>
         </tr>
