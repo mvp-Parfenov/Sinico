@@ -23,5 +23,8 @@ Route::group(
 
         Route::resource('regions', 'RegionController');
 
+        Route::group(['prefix' => 'adverts', 'as' => 'adverts.', 'namespace' => 'Adverts'], function () {
+            Route::resource('categories', 'CategoryController');
+        });
     }
 );

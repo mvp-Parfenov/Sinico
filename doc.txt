@@ -55,3 +55,27 @@ php artisan make:controller Admin\\UsersController --resource
 index -- show list
 create -- get
 store -- post
+
+php artisan db:seed --class=SomeClass
+or inf run list all classes and run with out --class
+
+autoload -> classmap  - просто подгружает классы без namespaces
+нужно указать папку от  корня директории
+composer dump-autoload -o -- перегенерация автолоада
+
+databaseTransactions каждый тест запускает черзе beginTransaction по окончанию откатывает изменения
+RefreshDatabase накатит тесты и откатит миграции
+
+fillable -> $this->update([]) иначе только черзе присваивание в переменные и вызова метода save()
+
+
+-------------------------------------------
+
+nested sets
+closure tables 
+laravel-nestedsets  имеет пример как он от себя добавляет таблицу и т.д.
+
+
+-------------------------------------------
+
+sympfony bridg middleware 15

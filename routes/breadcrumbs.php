@@ -5,7 +5,7 @@ use App\Entity\User;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator as Crumbs;
 use DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException;
 
-try{
+try {
 
     Breadcrumbs::register('home', function (Crumbs $crumbs) {
         $crumbs->push('Home', route('home'));
@@ -113,6 +113,11 @@ try{
     Breadcrumbs::register('admin.adverts.categories.edit', function (Crumbs $crumbs, Region $region) {
         $crumbs->parent('admin.adverts.categories.show', $region);
         $crumbs->push('Edit', route('admin.adverts.categories.edit', $region));
+    });
+
+    Breadcrumbs::register('admin.adverts.categories.edit', function (Crumbs $crumbs, Category $category) {
+        $crumbs->parent('admin.adverts.categories.show', $category);
+        $crumbs->push('Edit', route('admin.adverts.categories.edit', $category));
     });
 } catch (DuplicateBreadcrumbException $e) {
 }
