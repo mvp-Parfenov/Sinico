@@ -10,6 +10,7 @@ use Dotenv\Exception\ValidationException;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
+use function redirect;
 
 class LoginController extends Controller
 {
@@ -72,7 +73,7 @@ class LoginController extends Controller
                 );
             }
 
-            return redirect()->intended(route('cabinet'));
+            return redirect()->intended(route('cabinet.home'));
         }
 
         $this->incrementLoginAttempts($request);
@@ -83,7 +84,7 @@ class LoginController extends Controller
     {
         Auth::guard()->logout();
         $request->session()->invalidate();
-        return $this->redirectPath()->route('home');
+        return redirect()->route('home');
     }
 
     protected function username()
