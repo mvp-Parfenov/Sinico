@@ -37,8 +37,8 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -64,7 +64,9 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return view('admin.adverts.categories.show', compact('category'));
+        $attributes = $category->attributes()->orderBy('sort')->get();
+
+        return view('admin.adverts.categories.show', compact('category','attributes'));
     }
 
     /**
@@ -82,9 +84,9 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Entity\Adverts\Category  $category
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Entity\Adverts\Category $category
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Category $category)
     {
@@ -105,7 +107,7 @@ class CategoryController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Entity\Adverts\Category $category
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
     public function destroy(Category $category)
