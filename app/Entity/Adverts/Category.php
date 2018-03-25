@@ -2,6 +2,7 @@
 
 namespace App\Entity\Adverts;
 
+use function array_merge;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
 
@@ -29,5 +30,15 @@ class Category extends Model
     public function attributes()
     {
         return $this->hasMany(Attribute::class,'category_id', 'id');
+    }
+
+    public function parentAttributes(): array
+    {
+        return $this->parent ? $this->parent->allAttributes() : [];
+    }
+
+    public function allAttributes(): array
+    {
+        return array_merge($this->parentAttributes(), $this->attributes()->orderBy('sort')->getModels());
     }
 }
