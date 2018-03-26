@@ -7,7 +7,7 @@ use App\Entity\User;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator as Crumbs;
 use DaveJamesMiller\Breadcrumbs\Exceptions\DuplicateBreadcrumbException;
 
-try{
+try {
 
     Breadcrumbs::register('home', function (Crumbs $crumbs) {
         $crumbs->push('Home', route('home'));
@@ -138,14 +138,23 @@ try{
         $crumbs->push('Create', route('admin.adverts.categories.attributes.create', $category));
     });
 
-    Breadcrumbs::register('admin.adverts.categories.attributes.show', function (Crumbs $crumbs, Category $category, Attribute $attribute) {
-        $crumbs->parent('admin.adverts.categories.show', $category);
-        $crumbs->push($attribute->name, route('admin.adverts.categories.attributes.show', [$category, $attribute]));
+    Breadcrumbs::register('admin.adverts.categories.attributes.show',
+        function (Crumbs $crumbs, Category $category, Attribute $attribute) {
+            $crumbs->parent('admin.adverts.categories.show', $category);
+            $crumbs->push($attribute->name, route('admin.adverts.categories.attributes.show', [$category, $attribute]));
+        });
+
+    Breadcrumbs::register('admin.adverts.categories.attributes.edit',
+        function (Crumbs $crumbs, Category $category, Attribute $attribute) {
+            $crumbs->parent('admin.adverts.categories.attributes.show', $category, $attribute);
+            $crumbs->push('Edit', route('admin.adverts.categories.attributes.edit', [$category, $attribute]));
+        });
+
+
+    Breadcrumbs::register('cabinet.profile.phone', function (Crumbs $crumbs) {
+        $crumbs->parent('cabinet.profile.home');
+        $crumbs->push('Phone', route('cabinet.profile.phone'));
     });
 
-    Breadcrumbs::register('admin.adverts.categories.attributes.edit', function (Crumbs $crumbs, Category $category, Attribute $attribute) {
-        $crumbs->parent('admin.adverts.categories.attributes.show', $category, $attribute);
-        $crumbs->push('Edit', route('admin.adverts.categories.attributes.edit', [$category, $attribute]));
-    });
 } catch (DuplicateBreadcrumbException $e) {
 }
