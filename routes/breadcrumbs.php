@@ -156,5 +156,11 @@ try {
         $crumbs->push('Phone', route('cabinet.profile.phone'));
     });
 
+
+    Breadcrumbs::register('login.phone', function (Crumbs $crumbs) {
+        $crumbs->parent('home');
+        $crumbs->push('Login', route('login.phone'));
+    });
+
 } catch (DuplicateBreadcrumbException $e) {
 }
