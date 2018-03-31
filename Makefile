@@ -1,10 +1,10 @@
-docker-up:
+docker-up: memory
 	docker-compose up -d
 
 docker-down:
 	docker-compose down
 
-docker-build:
+docker-build: memory
 	docker-compose up --build -d
 
 test:
@@ -27,3 +27,6 @@ perm:
 	sudo chown ${USER}:${USER} storage -R
 	if [ -d "node_modules" ]; then sudo chown ${USER}:${USER} node_modules -R; fi
 	if [ -d "public/build" ]; then sudo chown ${USER}:${USER} public/build -R; fi
+
+memory:
+    sudo sysctl -w vm.max_map_count=262144
