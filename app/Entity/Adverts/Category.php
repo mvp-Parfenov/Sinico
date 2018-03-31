@@ -4,6 +4,7 @@ namespace App\Entity\Adverts;
 
 use function array_merge;
 use Illuminate\Database\Eloquent\Model;
+use function implode;
 use Kalnoy\Nestedset\NodeTrait;
 
 /**
@@ -26,6 +27,18 @@ class Category extends Model
     public $timestamps = false;
 
     protected $fillable = ['name', 'slug', 'parent_id'];
+
+    public function getPath(): string
+    {
+        return implode('/', array_merge(
+            $this
+            ->ancestors()
+            ->defaultOrder()
+            ->pluck('slug')
+            ->toArray(),
+            [$this->slug]
+        ));
+    }
 
     public function attributes()
     {
