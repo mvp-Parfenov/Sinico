@@ -9,6 +9,12 @@ use function redirect;
 
 class CategoryController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:manage-adverts-categories');
+    }
+
     /**
      * Display a listing of the resource.
      *
