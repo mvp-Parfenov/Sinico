@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method Builder forUser(User $user)
  * @method Builder forCategory(Category $category)
  * @method Builder forRegion(Region $region)
+ * @method Builder favoredByUser(User $user)
  */
 class Advert extends Model
 {
@@ -167,6 +168,11 @@ class Advert extends Model
         return $this->hasMany(Photo::class, 'advert_id', 'id');
     }
 
+    public function favorites()
+    {
+        return $this->belongsToMany(User::class, 'advert_favorites', 'advert_id', 'user_id');
+    }
+
     public function scopeActive(Builder $query)
     {
         return $query->where('status', self::STATUS_ACTIVE);
@@ -194,5 +200,12 @@ class Advert extends Model
         }
 
         return $query->whereIn('region_id', $ids);
+    }
+
+    public function scopeFavoredByUser(Builder $query, User $user)
+    {
+        return $query->whereHas('favorites', function (Builder $query) use ($user){
+            $query->where('user_id', $user->id);
+        });
     }
 }

@@ -114,6 +114,11 @@ try {
                 route('cabinet.adverts.create.advert', [$category, $region]));
         });
 
+    Breadcrumbs::register('cabinet.favorites.index', function (Crumbs $crumbs) {
+        $crumbs->parent('cabinet.home');
+        $crumbs->push('Adverts', route('cabinet.favorites.index'));
+    });
+
 
 // Admin
 
