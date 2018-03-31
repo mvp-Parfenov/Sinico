@@ -2,29 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+
+use App\Entity\Adverts\Category;
+use App\Entity\Region;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * only for auth users in system
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+
 
     /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
-        return view('home');
+        $regions = Region::roots()->orderBy('name')->getModels();
+
+        $categories = Category::whereIsRoot()->defaultOrder()->getModels();
+
+        return view('home', compact('regions', 'categories'));
     }
 }

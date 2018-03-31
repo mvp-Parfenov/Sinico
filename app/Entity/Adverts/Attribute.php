@@ -46,6 +46,11 @@ class Attribute extends Model
         ];
     }
 
+    public function isNumber(): bool
+    {
+        return $this->isInteger() || $this->isFloat();
+    }
+
     public function isString(): bool
     {
         return $this->type === self::TYPE_STRING;
