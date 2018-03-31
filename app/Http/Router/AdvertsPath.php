@@ -8,6 +8,7 @@ use App\Entity\Adverts\Category;
 use App\Entity\Region;
 use function array_shift;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Support\Facades\Cache;
 use function implode;
 use function reset;
 
@@ -31,6 +32,7 @@ class AdvertsPath implements UrlRoutable
     {
         $clone = clone $this;
         $clone->region = $region;
+
         return $clone;
     }
 
@@ -42,6 +44,7 @@ class AdvertsPath implements UrlRoutable
     {
         $clone = clone $this;
         $clone->category = $category;
+
         return $clone;
     }
 
@@ -54,12 +57,18 @@ class AdvertsPath implements UrlRoutable
     {
         $segments = [];
 
-        if($this->region){
-            $segments[] = $this->region->getPath();
+        if ($this->region) {
+            $segments[] = Cache::tags(Region::class)
+                ->rememberForever('region_path_'.$this->region->id, function () {
+                    return $this->region->getPath();
+                });
         }
 
-        if($this->category){
-            $segments[] = $this->category->getPath();
+        if ($this->category) {
+            $segments[] = Cache::tags(Category::class)->rememberForever('category_path_'.$this->category->id,
+                function () {
+                    return $this->category->getPath();
+                });
         }
 
         return implode('/', $segments);
@@ -85,38 +94,38 @@ class AdvertsPath implements UrlRoutable
     {
         $chunks = explode('/', $value);
 
-        /** @var Region|null $region*/
+        /** @var Region|null $region */
         $region = null;
 
-        do{
+        do {
             $slug = reset($chunks);
-            if(
+            if (
                 $slug && $next = Region
                     ::where('slug', $slug)
-                ->where('parent_id', $region ? $region->id : null)
-                ->first()
-            ){
+                    ->where('parent_id', $region ? $region->id : null)
+                    ->first()
+            ) {
                 $region = $next;
                 array_shift($chunks);
             }
-        }while(!empty($slug) && !empty($next));
+        } while (!empty($slug) && !empty($next));
 
-        /** @var Category|null $category*/
+        /** @var Category|null $category */
         $category = null;
-        do{
+        do {
             $slug = reset($chunks);
-            if(
+            if (
                 $slug
-            && $next = Category::where('slug', $slug)
-                ->where('parent_id', $category ? $category->id : null)
-                ->first()
-            ){
+                && $next = Category::where('slug', $slug)
+                    ->where('parent_id', $category ? $category->id : null)
+                    ->first()
+            ) {
                 $category = $next;
                 array_shift($chunks);
             }
-        }while(!empty($slug) && !empty($next));
+        } while (!empty($slug) && !empty($next));
 
-        if(!empty($chunks)){
+        if (!empty($chunks)) {
             abort(404);
         }
 
