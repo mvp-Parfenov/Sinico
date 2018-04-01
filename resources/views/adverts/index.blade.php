@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('search')
+    @include('layouts.partials.search', ['category' => $category, 'route' => '?'])
+@endsection
+
 @section('content')
 
 
