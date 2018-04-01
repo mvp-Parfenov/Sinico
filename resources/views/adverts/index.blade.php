@@ -18,7 +18,10 @@
                         <div class="col-md-3">
                             <ul class="list-unstyled">
                                 @foreach ($chunk as $current)
-                                    <li><a href="{{ route('adverts.index', array_merge(['adverts_path' => adverts_path($region, $current)], request()->all())) }}">{{ $current->name }}</a></li>
+                                    <li>
+                                        <a href="{{ route('adverts.index', array_merge(['adverts_path' => adverts_path($region, $current)], request()->all())) }}">{{ $current->name }}</a>
+                                        ({{ $categoriesCounts[$current->id] ?? 0 }})
+                                    </li>
                                 @endforeach
                             </ul>
                         </div>
@@ -43,7 +46,10 @@
                         <div class="col-md-3">
                             <ul class="list-unstyled">
                                 @foreach ($chunk as $current)
-                                    <li><a href="{{ route('adverts.index', array_merge(['adverts_path' => adverts_path($region, $current)], request()->all())) }}">{{ $current->name }}</a></li>
+                                    <li>
+                                        <a href="{{ route('adverts.index', array_merge(['adverts_path' => adverts_path($current, $category)], request()->all())) }}">{{ $current->name }}</a>
+                                        ({{ $regionsCounts[$current->id] ?? 0 }})
+                                    </li>
                                 @endforeach
                             </ul>
                         </div>
@@ -65,7 +71,8 @@
                             </div>
                             <div class="col-md-9">
                                 <span class="float-right">{{ $advert->price }}</span>
-                                <div class="h4" style="margin-top: 0"><a href="{{ route('adverts.show', $advert) }}">{{ $advert->title }}</a></div>
+                                <div class="h4" style="margin-top: 0"><a
+                                            href="{{ route('adverts.show', $advert) }}">{{ $advert->title }}</a></div>
                                 <p>Region: <a href="">{{ $advert->region ? $advert->region->name : 'All' }}</a></p>
                                 <p>Category: <a href="">{{ $advert->category->name }}</a></p>
                                 <p>Date: {{ $advert->created_at }}</p>
